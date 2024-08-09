@@ -2,15 +2,9 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
-import { useUser } from "../hooks/useUser";
-import { UserContext } from "../contexts/UserContext";
-
 import logo from "../assets/logo.png"
 
-const NavBar = () => {
-
-  const { user } = useContext(UserContext)
-
+const NavBar = ( {userData, admin} ) => {
   return (
     <nav
       className="navbar navbar-expand-lg bg-body-tertiary"
@@ -36,14 +30,23 @@ const NavBar = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              {!user ? <Link to="/login" className="nav-link">SignIn</Link> :
-                        <Link to="/users" className="nav-link">Usuarios</Link>}
-              
+              {!userData ? <Link to="/signup" className="nav-link">SignUp</Link> :
+                          <Link to="/" className="nav-link">Home</Link>}
             </li>
             <li className="nav-item">
-              {!user ? <Link to="/signup" className="nav-link">SignUp</Link> :
-                          <Link to="/signup" className="nav-link">Home</Link>}
+              {!userData ? <Link to="/login" className="nav-link">SignIn</Link> :
+                        <Link to="/sales" className="nav-link">Vendas</Link>}
+              
             </li>
+            {admin && (<li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+              </a>
+              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><Link to='/users' className="dropdown-item">Usuarios</Link></li>
+                <li><Link to='/sellers' className="dropdown-item">Vendedores</Link></li>
+              </ul>
+            </li>)}
           </ul>
         </div>
       </div>

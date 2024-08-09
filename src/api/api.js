@@ -28,7 +28,7 @@ api.interceptors.response.use(
             const rememberMe = Cookies.get('rememberMe');
             if (refreshToken) {
                 try {
-                    const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/refresh`, {}, {
+                    const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}user/refresh`, {}, {
                         headers: {
                             Authorization: `Bearer ${refreshToken}`
                         }
@@ -44,19 +44,18 @@ api.interceptors.response.use(
                     }
                     api.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                    console.log(originalRequest)
                     return api(originalRequest);
                 } catch (err) {
                     Cookies.remove('access_token');
                     Cookies.remove('refresh_token');
                     Cookies.remove('rememberMe');
-                    window.location.href = '/login';
                     return Promise.reject(err);
                 }
             } else {
                 Cookies.remove('access_token');
                 Cookies.remove('refresh_token');
                 Cookies.remove('rememberMe');
-                window.location.href = '/login';
                 return Promise.reject(error);
             }
         }

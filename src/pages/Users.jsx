@@ -1,38 +1,102 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import api from '../api/api'
+import NavBar from '../components/NavBar'
 
 const Users = () => {
-  return (
-    <div className='container'>
-      <h1>Usuarios</h1>
-      <p>Configurações de usuarios</p>
+  const [user, setUser] = useState(null)
+  const [users, setUsers] = useState([])
+  const [update, setUpdate] = useState(null)
+  const navigate = useNavigate()
+  
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get('/user/me')
+        setUser(res.data)
+      } catch (err) {
+        navigate("/login")
+      }
+    }
+    fetchUser()
+  }, [])
 
-      <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Position</th>
-                <th scope="col">admin</th>
-                <th scope="col">bot</th>
-                <th scope="col">active</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td><i class="bi bi-check-circle"></i></td>
-                <td><i class="bi bi-check-circle"></i></td>
-                <td><i class="bi bi-x-circle"></i></td>
-                <td><Link><i class="bi bi-pencil-square"></i></Link></td>
-            </tr>
-        </tbody>
-    </table>
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await api.get('user')
+        if (res.status === 200) {
+          setUsers(res.data)
+          console.log(res)
 
-    </div>
+          
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    fetchUsers()
+  }, [])
+
+  const handleApprove = async (user) => {
+    try {
+      const data = user
+      data.active = !user.active
+      const res = await api.put(`user/${user.id}`, data)
+      setUpdate(res.data)
+      console.log(res)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+
+
+  return ( 
+    <>
+      <NavBar userData={user}/>
+      <div className='container'>
+        <h1>Usuarios</h1>
+        <p>Configurações de usuarios</p>
+        <table className="table">
+          <thead>
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Cargo</th>
+                  <th scope="col">Admin</th>
+                  <th scope="col">Bot</th>
+                  <th scope="col">Ativo</th>
+                  <th>Ações</th>
+              </tr>
+          </thead>
+          <tbody>
+            {
+              users.map((userData) => {
+                return <tr key={userData.id}>
+                  <th scope="row">{userData.id}</th>
+                  <td>{userData.name}</td>
+                  <td>{userData.position_id}</td>
+                  <td>{userData.admin === true ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
+                  <td>{userData.bot === true ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
+                  <td>{userData.active === true ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
+                  <td>{!userData.active ? <Link onClick={async () => await handleApprove(userData)}><i className="bi bi-check-circle m-1"></i></Link> :
+                                          <Link onClick={async () => await handleApprove(userData)}><i className="bi bi-x-circle m-1"></i></Link>}
+                      <Link><i className="bi bi-robot m-1"></i></Link>
+                      <Link><i className="bi bi-award m-1"></i></Link>
+                      <Link><i className="bi bi-pencil m-1"></i></Link>
+                  </td>
+                </tr>
+              })
+            }
+          </tbody>
+        </table>
+
+      </div>
+    </>
+  
   )
 }
 
