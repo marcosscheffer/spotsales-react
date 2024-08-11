@@ -16,6 +16,7 @@ import SignUp from './pages/SignUp';
 import NotFound from './pages/NotFound';
 import Users from './pages/Users';
 import Sellers from './pages/Sellers';
+import ChecklistGeneral from './pages/ChecklistGeneral';
 
 // Components
 import NavBar from './components/NavBar';
@@ -37,6 +38,7 @@ function App() {
                 <Route path='/sellers' element={<Sellers/>} />]
                 <Route path='/sales' element={<Sales/>} />
                 <Route path='*' element={<NotFound/>} />
+                <Route path='/checklist/0/:id' element={<ChecklistGeneral/>} />
             </Routes>
           </main>
           <Footer />

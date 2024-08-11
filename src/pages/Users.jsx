@@ -6,6 +6,7 @@ import NavBar from '../components/NavBar'
 
 const Users = () => {
   const [user, setUser] = useState(null)
+  const [admin, setAdmin] = useState(false)
   const [users, setUsers] = useState([])
   const [update, setUpdate] = useState(null)
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ const Users = () => {
       try {
         const res = await api.get('/user/me')
         setUser(res.data)
+        setAdmin(res.data.admin)
       } catch (err) {
         navigate("/login")
       }
@@ -56,7 +58,7 @@ const Users = () => {
 
   return ( 
     <>
-      <NavBar userData={user}/>
+      <NavBar userData={user} admin={admin }/>
       <div className='container'>
         <h1>Usuarios</h1>
         <p>Configurações de usuarios</p>

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../api/api'
 import NavBar from '../components/NavBar'
 
 const SignUp = () => {
+    const [user, setUser] = useState(null)
     const [error, setError] = useState(null)
     const [message, setMessage] = useState(null)
     const [loading, setLoading] = useState(null)
@@ -14,6 +16,24 @@ const SignUp = () => {
     const [position, setPosition] = useState("")
     const [options, setOptions] = useState(null)
 
+    const navigate = useNavigate()
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const userfetch = await api.get('/user/me')
+                if (userfetch.status === 200) {
+                    setUser(userfetch.data)
+                    navigate("/")
+                }
+                    
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchUser()
+    }, [])
 
 
     useEffect(() => {

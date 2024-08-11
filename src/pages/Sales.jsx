@@ -47,6 +47,7 @@ const Sales = () => {
           <thead>
               <tr>
                   <th scope="col">#</th>
+                  <th scope="col">Cliente</th>
                   <th scope="col">Data de Venda</th>
                   <th scope="col">Valor</th>
                   <th scope="col">Vendedor</th>
@@ -59,9 +60,10 @@ const Sales = () => {
               sales.map((lead) => {
                 return <tr key={lead.id}>
                   <th scope="row">{lead.id}</th>
+                  <td>{lead.company}</td>
                   <td>{lead.sale_date}</td>
                   <td>R$ {lead.value}</td>
-                  <td>{lead.seller_id ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
+                  <td>{lead.seller_name}</td>
                   <td>{lead.active ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
                   <td><Link><i className="bi bi-check-circle m-1"></i></Link>
                       <Link><i className="bi bi-robot m-1"></i></Link>
