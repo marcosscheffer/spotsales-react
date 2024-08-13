@@ -38,10 +38,7 @@ const ChecklistGeneral = () => {
         fetchData()
     }, [id])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        navigate(`/leadsSales/${id}/checklist/products`)
-    }
+   
     
     if (!data) {
         return <h1>Loading...</h1>
@@ -70,7 +67,7 @@ const ChecklistGeneral = () => {
                     <input type="text" className="form-control" id="saleDate" value={data.sale_date} readOnly />
                 </div>
                 <div className="col-12">
-                    <button className="btn btn-primary" onClick={handleSubmit}>Proximo</button>
+                    <button className="btn btn-primary">Proximo</button>
                 </div>
             </form>
         </div>
