@@ -9,6 +9,7 @@ const ChecklistGeneral = () => {
     const [user, setUser] = useState(null)
     const [admin, setAdmin] = useState(null)
     const [data, setData] = useState()
+    const [error, setError] = useState()
     const { id } = useParams()
 
 
@@ -26,7 +27,7 @@ const ChecklistGeneral = () => {
             }
         }
         fetchUser()
-    }, [])
+    }, [navigate])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,6 +38,22 @@ const ChecklistGeneral = () => {
         }
         fetchData()
     }, [id])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            const json_data = {
+                "id": data.id,
+                "seller_id": data.seller_id,
+                "sale_date": data.sale_date,
+                "value": data.value,
+            }
+            await api.post("/checklist", json_data)
+            navigate("/checklist/1/" + data.id)
+        } catch (err) {
+            setError("Ocorreu algum problema!")
+        }
+    }
 
    
     
@@ -49,6 +66,11 @@ const ChecklistGeneral = () => {
         <div className="container bg-secondary-subtle p-5">
             <h1>checklist</h1>
             <p>Verifique se os dados da venda estão corretos antes de prosseguir.</p>
+            {error && (
+            <div class="alert alert-danger" role="alert">
+                {error}
+            </div>
+            )}
             <form className="row g-3 mt-2">
                 <div className="col-md-2">
                     <label htmlFor="id" className="form-label"><b>#</b></label>
@@ -67,7 +89,7 @@ const ChecklistGeneral = () => {
                     <input type="text" className="form-control" id="saleDate" value={data.sale_date} readOnly />
                 </div>
                 <div className="col-12">
-                    <button className="btn btn-primary">Proximo</button>
+                    <button className="btn btn-primary" onClick={handleSubmit}>Proximo</button>
                 </div>
             </form>
         </div>

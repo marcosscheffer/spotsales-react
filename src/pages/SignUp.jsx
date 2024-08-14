@@ -23,17 +23,15 @@ const SignUp = () => {
         const fetchUser = async () => {
             try {
                 const userfetch = await api.get('/user/me')
-                if (userfetch.status === 200) {
-                    setUser(userfetch.data)
-                    navigate("/")
-                }
+                setUser(userfetch.data)
+                navigate("/")
                     
             } catch (err) {
                 console.error(err)
             }
         }
         fetchUser()
-    }, [])
+    }, [navigate])
 
 
     useEffect(() => {
@@ -64,9 +62,12 @@ const SignUp = () => {
 
             try { 
                 const res = await api.post('user/register', data)
+                if (res.status === 201) {
+                    setMessage("Usuario registrado com sucesso, agora espere ate seu registro ser aprovado por um administrator")
+                    setError("")
 
-                setMessage("Usuario registrado com sucesso, agora espere ate seu registro ser aprovado por um administrator")
-                setError("")
+                }
+
 
 
             } catch (err) {

@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound';
 import Users from './pages/Users';
 import Sellers from './pages/Sellers';
 import ChecklistGeneral from './pages/ChecklistGeneral';
+import ChecklistEquipments from './pages/ChecklistEquipments';
 
 // Components
 import NavBar from './components/NavBar';
@@ -39,6 +40,7 @@ function App() {
                 <Route path='/sales' element={<Sales/>} />
                 <Route path='*' element={<NotFound/>} />
                 <Route path='/checklist/0/:id' element={<ChecklistGeneral/>} />
+                <Route path='/checklist/1/:id' element={<ChecklistEquipments/>} />
             </Routes>
           </main>
           <Footer />

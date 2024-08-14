@@ -5,7 +5,6 @@ import api from '../api/api'
 import NavBar from '../components/NavBar'
 
 const Home = () => {
-    const [value, setValue] = useState('')
     const [user, setUser] = useState(null)
     const [admin, setAdmin] = useState(null)
     const navigate = useNavigate()
@@ -14,27 +13,17 @@ const Home = () => {
       const fetchUser = async () => {
         try {
           const userFetch = await api.get('/user/me')
-          if (userFetch.status === 200) {
-            setUser(userFetch.data)
-            setAdmin(userFetch.data.admin)
-          }
+          setUser(userFetch.data)
+          setAdmin(userFetch.data.admin)
+
         } catch (err) {
           console.error(err)
           navigate("/login")
         }
       }
       fetchUser()
-    }, [])
+    }, [navigate])
 
-    const handleChoose = async (event) => {
-        event.preventDefault()
-        try {
-          await api.post('/sellers')
-        } catch (err) {
-          console.error(err)
-        }
-
-    }
 
   return (
     <>

@@ -18,17 +18,15 @@ const Login = () => {
         const fetchUser = async () => {
             try {
                 const userfetch = await api.get('/user/me')
-                if (userfetch.status === 200) {
-                    setUser(userfetch.data)
-                    navigate("/")
-                }
+                setUser(userfetch.data)
+                navigate("/")    
                     
             } catch (err) {
                 console.error(err)
             }
         }
         fetchUser()
-    }, [])
+    }, [navigate])
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -56,7 +54,7 @@ const Login = () => {
                 setPassword("")
                 navigate("/")
             } else {
-                setError("Credenciais inválidas")
+                setError("Credenciais inválidas ou seu login ainda não foi aprovado")
                 setLogin("")
                 setPassword("")
             }

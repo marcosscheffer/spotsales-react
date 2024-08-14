@@ -29,7 +29,7 @@ const Sellers = () => {
             }
         }
         fetchUser()
-    }, [])
+    }, [navigate])
 
     useEffect(() => {
         const fetchsellers = async () => {
@@ -52,8 +52,10 @@ const Sellers = () => {
         const seller = {id: Number(id), first_name: firstName, last_name: lastName, email }
         try {
             const res = await api.post('sellers', seller)
-            setAdd(false)
-            setUpdate(seller)
+            if (res.status === 201) {
+                setAdd(false)
+                setUpdate(seller)
+            }
             
         } catch (err) {
             setError("Algo deu errado... Tente Novamente!")
