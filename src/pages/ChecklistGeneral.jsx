@@ -23,7 +23,7 @@ const ChecklistGeneral = () => {
                 setAdmin(res.data.admin)
 
             } catch (err) {
-                navigate('/login')
+                navigate('/login?next=/checklist/0/' + id)
             }
         }
         fetchUser()
@@ -31,10 +31,14 @@ const ChecklistGeneral = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            try {
+                const res = await api.get("/leadsSales/" + id)
+                console.log(res.data)
+                setData(res.data)
+            } catch (err) {
+                setError("Ocorreu algum erro")
+            }
             
-            const res = await api.get("/leadsSales/" + id)
-            console.log(res.data)
-            setData(res.data)
         }
         fetchData()
     }, [id])
@@ -47,10 +51,18 @@ const ChecklistGeneral = () => {
                 "seller_id": data.seller_id,
                 "sale_date": data.sale_date,
                 "value": data.value,
+                "ts": data.ts
             }
             await api.post("/checklist", json_data)
             navigate("/checklist/1/" + data.id)
         } catch (err) {
+            if (err.response.status === 400) {
+                if ('id' in err.response.data) {
+                    // if the lead sold already exists in the database, navigate to the next page
+                    navigate("/checklist/1/" + data.id)
+                }
+            }
+            console.log(err)
             setError("Ocorreu algum problema!")
         }
     }
@@ -63,15 +75,15 @@ const ChecklistGeneral = () => {
   return (
     <>
         <NavBar userData={user} admin={admin}/>
-        <div className="container bg-secondary-subtle p-5">
+        <div className="container bg-secondary-subtle p-4">
             <h1>checklist</h1>
             <p>Verifique se os dados da venda estão corretos antes de prosseguir.</p>
             {error && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
                 {error}
             </div>
             )}
-            <form className="row g-3 mt-2">
+            <form className="row g-3 mt-2" onSubmit={handleSubmit}>
                 <div className="col-md-2">
                     <label htmlFor="id" className="form-label"><b>#</b></label>
                     <input type="text" className="form-control" id="id" value={data.id} readOnly />
@@ -89,7 +101,7 @@ const ChecklistGeneral = () => {
                     <input type="text" className="form-control" id="saleDate" value={data.sale_date} readOnly />
                 </div>
                 <div className="col-12">
-                    <button className="btn btn-primary" onClick={handleSubmit}>Proximo</button>
+                    <button className="btn btn-primary">Proximo</button>
                 </div>
             </form>
         </div>

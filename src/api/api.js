@@ -44,7 +44,6 @@ api.interceptors.response.use(
                     }
                     api.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                    console.log(originalRequest)
                     return api(originalRequest);
                 } catch (err) {
                     Cookies.remove('access_token');

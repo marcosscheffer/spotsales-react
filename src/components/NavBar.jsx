@@ -1,13 +1,11 @@
-import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
 
 import logo from "../assets/logo.png"
 
 const NavBar = ( {userData, admin} ) => {
   return (
     <nav
-      className="navbar navbar-expand-lg bg-body-tertiary"
+      className="navbar navbar-expand-lg bg-body-tertiary sticky-top"
       data-bs-theme="dark"
     >
       <div className="container-fluid">

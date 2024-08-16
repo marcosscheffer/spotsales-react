@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from 'js-cookie'
 import api from "../api/api";
 import NavBar from "../components/NavBar";
@@ -13,6 +13,9 @@ const Login = () => {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const location = useLocation()
+
+
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -27,6 +30,11 @@ const Login = () => {
         }
         fetchUser()
     }, [navigate])
+
+    const getQueryParams = (param) => {
+        const params = new URLSearchParams(location.search)
+        return params.get(param)
+    }
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -52,7 +60,12 @@ const Login = () => {
                 }
                 setLogin("")
                 setPassword("")
-                navigate("/")
+                const next = getQueryParams("next")
+                if (next) {
+                    navigate(next)
+                } else {
+                    navigate("/")
+                }
             } else {
                 setError("Credenciais inválidas ou seu login ainda não foi aprovado")
                 setLogin("")
