@@ -4,10 +4,6 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import axios from 'axios';
-import Cookies from 'js-cookie';
-
-import style from './App.css'
 
 // Pages
 import Login from './pages/Login';
@@ -20,9 +16,11 @@ import ChecklistGeneral from './pages/ChecklistGeneral';
 import ChecklistEquipments from './pages/ChecklistEquipments';
 
 // Components
-import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import Sales from './pages/Sales';
+import ChecklistPipeline from './pages/ChecklistPipeline';
+import ChecklistDelivery from './pages/ChecklistDelivery';
+import ChecklistFinal from './pages/ChecklistFinal';
 
 
 
@@ -41,6 +39,10 @@ function App() {
                 <Route path='*' element={<NotFound/>} />
                 <Route path='/checklist/0/:id' element={<ChecklistGeneral/>} />
                 <Route path='/checklist/1/:id' element={<ChecklistEquipments/>} />
+                <Route path='/checklist/2/:id' element={<ChecklistPipeline/>} />
+                <Route path='/checklist/3/:id' element={<ChecklistDelivery/>} />
+                <Route path='/checklist/4/:id' element={<ChecklistFinal/>} />
+
             </Routes>
           </main>
           <Footer />

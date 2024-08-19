@@ -8,6 +8,8 @@ const Sales = () => {
     const [admin, setAdmin] = useState()
     const [sales, setSales] = useState([])
     const [error, setError] = useState("")
+    const [page, setPage] = useState(1)
+    const [totalPages, setTotalPages] = useState()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -28,15 +30,33 @@ const Sales = () => {
     useEffect(() => {
         const fetchSales = async () => {
             try {
-                const res = await api.get('leadsSales')
-                setSales(res.data)
+                const res = await api.get('/leadsSales?page=' + page)
+                setSales(res.data.results)
+                setTotalPages(res.data.pages)
                 setError("")
             } catch {
                 setError("Não foi possivel carregar as vendas!")
             }
         }
         fetchSales()
-    }, [])
+    }, [page])
+
+    const render_pages = () => {
+      const pages = []
+
+      pages.push(page === 1 ? <li class="page-item disabled"><Link class="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li> :
+      <li class="page-item"><Link class="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li>)
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(
+          page === i ? <li class="page-item active"><Link class="page-link" onClick={(e) => setPage(i)}>{i}</Link></li> :
+          <li class="page-item"><Link class="page-link" onClick={(e) => setPage(i)}>{i}</Link></li>
+        )
+      }
+      pages.push(page === totalPages ? <li class="page-item disabled"><Link class="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li> :
+      <li class="page-item"><Link class="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li>)
+
+      return pages
+    }
   return (
     <>
         <NavBar userData={user} admin={admin}/>
@@ -80,6 +100,11 @@ const Sales = () => {
             }
           </tbody>
         </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {render_pages()}
+          </ul>
+        </nav>
       </div>
     </>
   )

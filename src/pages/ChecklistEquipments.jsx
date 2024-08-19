@@ -33,7 +33,7 @@ const ChecklistEquipments = () => {
                 setAdmin(res.data.admin)
 
             } catch (err) {
-                navigate('/login')
+                navigate('/login?next=/checklist/1/' + id)
             }
         }
         fetchUser()
@@ -51,7 +51,7 @@ const ChecklistEquipments = () => {
                 setEletricKey(res.data.eletric_key)
                 setEletricPanel(res.data.eletric_panel)
                 setLayout(res.data.layout)
-                setDescription(res.data.description)
+                setDescription(res.data.description_panel)
                 setTs(res.data.ts)
                 setError("")
             } catch (err) {
@@ -75,7 +75,7 @@ const ChecklistEquipments = () => {
             "eletric_key": eletricKey,
             "eletric_panel":eletricPanel,
             "layout": layout,
-            "description": description
+            "description_panel": description || ""
         }
         try {
             await api.put("checklist/" + id, json_data)
@@ -197,7 +197,7 @@ const ChecklistEquipments = () => {
 
                 {eletricPanel && (
                     <div className="form-floating">
-                        <textarea className="form-control" id="description_panel" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+                        <textarea className="form-control"  maxLength="255" id="description_panel" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
                         <label htmlFor="description_panel" className='mx-1'>Descrição do painel</label>
                     </div>
                 )}
@@ -215,6 +215,7 @@ const ChecklistEquipments = () => {
                 </div>
 
                 <div className="col-12">
+                    <button className="btn btn-primary m-2" onClick={() => navigate('/checklist/0/' + id)}>Voltar</button>
                     {!buttonLoading ? <button className="btn btn-primary">Proximo</button>:
                     <button className="btn btn-primary" onSubmit={handleSubmit} disabled>Proximo</button>}
                     
