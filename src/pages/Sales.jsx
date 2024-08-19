@@ -9,6 +9,7 @@ const Sales = () => {
     const [sales, setSales] = useState([])
     const [error, setError] = useState("")
     const [page, setPage] = useState(1)
+    const [search, setSearch] = useState("")
     const [totalPages, setTotalPages] = useState()
     const navigate = useNavigate()
 
@@ -30,41 +31,64 @@ const Sales = () => {
     useEffect(() => {
         const fetchSales = async () => {
             try {
-                const res = await api.get('/leadsSales?page=' + page)
-                setSales(res.data.results)
-                setTotalPages(res.data.pages)
-                setError("")
+              console.log(search)
+              let res;
+              if (search) {
+                res = await api.get('/leadsSales?page=' + page + "&q=" + search)
+              } else {
+                res = await api.get('/leadsSales?page=' + page)
+              }
+              setSales(res.data.results)
+              setTotalPages(res.data.pages)
+              setError("")
             } catch {
                 setError("Não foi possivel carregar as vendas!")
             }
         }
         fetchSales()
-    }, [page])
+    }, [page, search])
 
     const render_pages = () => {
       const pages = []
 
-      pages.push(page === 1 ? <li class="page-item disabled"><Link class="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li> :
-      <li class="page-item"><Link class="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li>)
+      pages.push(page === 1 ? <li className="page-item disabled"><Link className="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li> :
+      <li className="page-item" key={0}><Link className="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li>)
       for (let i = 1; i <= totalPages; i++) {
         pages.push(
-          page === i ? <li class="page-item active"><Link class="page-link" onClick={(e) => setPage(i)}>{i}</Link></li> :
-          <li class="page-item"><Link class="page-link" onClick={(e) => setPage(i)}>{i}</Link></li>
+          page === i ? <li className="page-item active" key={i}><Link className="page-link" onClick={(e) => setPage(i)}>{i}</Link></li> :
+          <li className="page-item"><Link className="page-link" onClick={(e) => setPage(i)}>{i}</Link></li>
         )
       }
-      pages.push(page === totalPages ? <li class="page-item disabled"><Link class="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li> :
-      <li class="page-item"><Link class="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li>)
+      pages.push(page === totalPages ? <li className="page-item disabled" key={totalPages + 1}><Link className="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li> :
+      <li className="page-item"><Link className="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li>)
 
       return pages
     }
+
   return (
     <>
         <NavBar userData={user} admin={admin}/>
         <div className='container'>
         <h1>Vendas</h1>
         <p>Vendas realizadas via Exact-Sales</p>
+        <div className="container mt-5 d-flex justify-content-end input-group flex-nowrap">
+          <form role="search">
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="addon-wrapping"
+              style={{ width: '300px', height: '35px', fontSize: '0.9rem' }}
+              id='search'
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </form>
+          <span className='my-auto mx-3'><i className="bi bi-search"></i></span>
+        </div>
         {error && (
-        <div class="alert alert-danger" role="alert">
+        <div className="alert alert-danger" role="alert">
           {error}
         </div>
         )}
@@ -100,8 +124,8 @@ const Sales = () => {
             }
           </tbody>
         </table>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
+        <nav aria-label="Page navigation">
+          <ul className="pagination">
             {render_pages()}
           </ul>
         </nav>
