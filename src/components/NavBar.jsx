@@ -10,7 +10,7 @@ const NavBar = ( {userData, admin} ) => {
     >
       <div className="container-fluid">
         <Link to="/" className="navbar-brand">
-          <img src={logo} className="d-inline-block align-top" height={40} alt="Logo" />
+          <img src={logo} className="d-inline-block align-top" height={50} alt="Logo" />
         </Link>
 
         <button

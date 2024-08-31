@@ -53,8 +53,14 @@ const ChecklistGeneral = () => {
                 "value": data.value,
                 "ts": data.ts
             }
-            await api.post("/checklist", json_data)
-            navigate("/checklist/1/" + data.id)
+            if (data.filter) {
+                // await api.post("/filter-op", json_data)
+                navigate("/filter/" + data.id)
+
+            } else {
+                await api.post("/checklist", json_data)
+                navigate("/checklist/1/" + data.id)
+            }
         } catch (err) {
             if (err.response.status === 400) {
                 if ('id' in err.response.data) {
@@ -62,13 +68,10 @@ const ChecklistGeneral = () => {
                     navigate("/checklist/1/" + data.id)
                 }
             }
-            console.log(err)
             setError("Ocorreu algum problema!")
         }
     }
 
-   
-    
     if (!data) {
         return <h1>Loading...</h1>
     }

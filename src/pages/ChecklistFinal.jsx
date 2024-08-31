@@ -35,7 +35,7 @@ const ChecklistFinal = () => {
             }
         }
         fetchUser()
-    }, [navigate])
+    }, [id, navigate])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,7 +52,7 @@ const ChecklistFinal = () => {
             }
         }
         fetchData()
-    }, [])
+    }, [id])
 
     function formatDateToDDMMYYYY(dateString) {
         const date = new Date(dateString)
@@ -120,6 +120,10 @@ const ChecklistFinal = () => {
         <div className="container bg-secondary-subtle p-4">
             <h1>Checklist Final</h1>
             <p>pré-vizualização do checklist feita, confirme os dados e se estiver correto, então envie</p>
+            {error && (
+                <div class="alert alert-danger" role="alert">
+                    {error}
+                </div>)}
             <div id='pdf-content' className='border bg-white p-5'>
                 <p>{new Date().toLocaleString()}</p>
                 <img src={logo} className="img-fluid" alt="logo" style={{width: '7em'}}></img>
@@ -152,7 +156,7 @@ const ChecklistFinal = () => {
                         </tr>
                         <tr>
                             <th scope='row'>Fase</th>
-                            <td>{dataChecklist.phases == 1 ? "Monofásico" : "Trifásico"}</td>
+                            <td>{dataChecklist.phases === 1 ? "Monofásico" : "Trifásico"}</td>
                         </tr>
                         <tr>
                             <th scope='row'>Voltagem</th>
@@ -223,7 +227,7 @@ const ChecklistFinal = () => {
                     <tbody>
                         <tr>
                             <th scope='row'>Frete</th>
-                            <td>{dataChecklist.fright == "cif" ? "CIF" : "FOB"}</td>
+                            <td>{dataChecklist.fright === "cif" ? "CIF" : "FOB"}</td>
                         </tr>
                         <tr>
                             <th scope='row'>Palete</th>
@@ -275,7 +279,7 @@ const ChecklistFinal = () => {
                 </div>
                 
             </div>
-            <button className="btn btn-primary m-2" onClick={(e) => navigate("/checklist/3/" + id)}>Voltar</button>
+            <button className="btn btn-secondary m-2" onClick={(e) => navigate("/checklist/3/" + id)}>Voltar</button>
             <button onClick={generatePdf} className='btn btn-success m-2'>Enviar</button>
 
         </div>

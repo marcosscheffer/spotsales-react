@@ -33,7 +33,7 @@ const ChecklistPipeline = () => {
             }
         }
         fetchUser()
-    }, [navigate])
+    }, [id, navigate])
 
     useEffect(() => {
         setLoading(true)
@@ -173,7 +173,7 @@ const ChecklistPipeline = () => {
                 
 
                 <div className="col-12">
-                    <button className="btn btn-primary m-2" onClick={(e) => navigate("/checklist/1/" + id)}>Voltar</button>
+                    <button className="btn btn-secondary m-2" onClick={(e) => navigate("/checklist/1/" + id)}>Voltar</button>
                     {!buttonLoading ? <button className="btn btn-primary">Proximo</button>:
                     <button className="btn btn-primary" onSubmit={handleSubmit} disabled>Proximo</button>}
 

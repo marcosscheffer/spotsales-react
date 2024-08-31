@@ -21,7 +21,6 @@ const Sales = () => {
                 setAdmin(userfetch.data.admin)
                 
             } catch (err){
-                console.error(err)
                 navigate("/login")
             }
         }
@@ -31,36 +30,41 @@ const Sales = () => {
     useEffect(() => {
         const fetchSales = async () => {
             try {
-              console.log(search)
-              let res;
-              if (search) {
-                res = await api.get('/leadsSales?page=' + page + "&q=" + search)
-              } else {
-                res = await api.get('/leadsSales?page=' + page)
-              }
+              const res = await api.get('/leadsSales?page=' + page + "&q=" + search)
               setSales(res.data.results)
               setTotalPages(res.data.pages)
               setError("")
             } catch {
-                setError("Não foi possivel carregar as vendas!")
+              setPage(1)
+              setError("Não foi possivel carregar as vendas!")
             }
         }
         fetchSales()
     }, [page, search])
 
+    function formatDateToDDMMYYYY(dateString) {
+      const date = new Date(dateString)
+
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = date.getFullYear()
+    
+      return `${day}/${month}/${year}`
+    }
+
     const render_pages = () => {
       const pages = []
 
-      pages.push(page === 1 ? <li className="page-item disabled"><Link className="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li> :
-      <li className="page-item" key={0}><Link className="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li>)
+      pages.push(page === 1 ? <li className="page-item disabled" key="prev"><Link className="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li> :
+      <li className="page-item" key="prev"><Link className="page-link" onClick={(e) => setPage(page - 1)}>Prev</Link></li>)
       for (let i = 1; i <= totalPages; i++) {
         pages.push(
           page === i ? <li className="page-item active" key={i}><Link className="page-link" onClick={(e) => setPage(i)}>{i}</Link></li> :
-          <li className="page-item"><Link className="page-link" onClick={(e) => setPage(i)}>{i}</Link></li>
+          <li className="page-item" key={i}><Link className="page-link" onClick={(e) => setPage(i)}>{i}</Link></li>
         )
       }
-      pages.push(page === totalPages ? <li className="page-item disabled" key={totalPages + 1}><Link className="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li> :
-      <li className="page-item"><Link className="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li>)
+      pages.push(page === totalPages ? <li className="page-item disabled" key="next"><Link className="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li> :
+      <li className="page-item" key="next"><Link className="page-link" onClick={(e) => setPage(page + 1)}>Next</Link></li>)
 
       return pages
     }
@@ -71,7 +75,7 @@ const Sales = () => {
         <div className='container'>
         <h1>Vendas</h1>
         <p>Vendas realizadas via Exact-Sales</p>
-        <div className="container mt-5 d-flex justify-content-end input-group flex-nowrap">
+        <div className="container mt-5 d-flex justify-content-end input-group flex-nowrap m-3">
           <form role="search">
             <input
               className="form-control"
@@ -87,6 +91,7 @@ const Sales = () => {
           </form>
           <span className='my-auto mx-3'><i className="bi bi-search"></i></span>
         </div>
+        <hr />
         {error && (
         <div className="alert alert-danger" role="alert">
           {error}
@@ -101,7 +106,7 @@ const Sales = () => {
                   <th scope="col">Valor</th>
                   <th scope="col">Vendedor</th>
                   <th scope="col">Preenchido</th>
-                  <th scope="col">Ativo</th>
+                  <th scope="col">Filtro</th>
                   <th>Ações</th>
               </tr>
           </thead>
@@ -111,14 +116,12 @@ const Sales = () => {
                 return <tr key={lead.id}>
                   <th scope="row">{lead.id}</th>
                   <td>{lead.company}</td>
-                  <td>{lead.sale_date}</td>
+                  <td>{formatDateToDDMMYYYY(lead.sale_date)}</td>
                   <td>R$ {lead.value}</td>
-                  <td>{lead.seller_name}</td>
+                  <td>{lead.seller_id}</td>
                   <td>{!lead.filled ? <i className="bi bi-x-circle"></i> : lead.filled}</td>
-                  <td>{lead.active ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
-                  <td><Link to={"/checklist/0/" + lead.id}><i className="bi bi-card-checklist m-1"></i></Link>
-                      <Link><i className="bi bi-pencil m-1"></i></Link>
-                  </td>
+                  <td>{lead.filter ? <i className="bi bi-check-circle"></i> : <i className="bi bi-x-circle"></i>}</td>
+                  <td><Link to={"/checklist/0/" + lead.id}><i className="bi bi-card-checklist m-1"></i></Link></td>
                 </tr>
               })
             }

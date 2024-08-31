@@ -21,6 +21,7 @@ import Sales from './pages/Sales';
 import ChecklistPipeline from './pages/ChecklistPipeline';
 import ChecklistDelivery from './pages/ChecklistDelivery';
 import ChecklistFinal from './pages/ChecklistFinal';
+import ChecklistFilter from './pages/ChecklistFilter';
 
 
 
@@ -42,6 +43,7 @@ function App() {
                 <Route path='/checklist/2/:id' element={<ChecklistPipeline/>} />
                 <Route path='/checklist/3/:id' element={<ChecklistDelivery/>} />
                 <Route path='/checklist/4/:id' element={<ChecklistFinal/>} />
+                <Route path='/filter/:id' element={<ChecklistFilter/>} />
 
             </Routes>
           </main>
